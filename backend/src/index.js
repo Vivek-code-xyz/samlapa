@@ -7,11 +7,17 @@ import cookieParser from "cookie-parser"
 import cors from "cors"
 import helmet from "helmet"
 import { app,server } from "./lib/socket.js";
+import fs from "fs"
 import path from "path";
+import { fileURLToPath } from "url";
+
 dotenv.config()
 
 const PORT = process.env.PORT || 5000;
-const __dirname = path.resolve()
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+const backendDir = path.resolve(__dirname, "..")
+const clientBuildPath = path.resolve(backendDir, "../frontend/dist")
 
 app.use(helmet())
 app.use(express.json())
@@ -25,11 +31,11 @@ app.use(cors({
 app.use('/api/auth', authRoutes)
 app.use('/api/messages', messageRoutes)
 
-if(process.env.NODE_ENV === 'production'){
-    app.use(express.static(path.join(__dirname, '../frontend/dist')))
+if (fs.existsSync(clientBuildPath)) {
+    app.use(express.static(clientBuildPath))
 
     app.use('*', (req, res) => {
-        res.sendFile(path.join(__dirname, '../frontend/dist', 'index.html'))
+        res.sendFile(path.join(clientBuildPath, 'index.html'))
     })
 }
 
