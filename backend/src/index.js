@@ -1,7 +1,9 @@
+import dotenv from "dotenv"
+dotenv.config()
+
 import express from "express"
 import authRoutes from "./routes/auth.routes.js";
 import messageRoutes from "./routes/message.routes.js";
-import dotenv from "dotenv"
 import { connectDB } from "./lib/db.js";
 import cookieParser from "cookie-parser"
 import cors from "cors"
@@ -11,8 +13,6 @@ import fs from "fs"
 import path from "path";
 import { fileURLToPath } from "url";
 
-dotenv.config()
-
 const PORT = process.env.PORT || 5000;
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -20,7 +20,8 @@ const backendDir = path.resolve(__dirname, "..")
 const clientBuildPath = path.resolve(backendDir, "../frontend/dist")
 
 app.use(helmet())
-app.use(express.json())
+app.use(express.json({ limit: '20mb' }))
+app.use(express.urlencoded({ extended: true, limit: '20mb' }))
 app.use(cookieParser())
 app.use(cors({
     origin:"http://localhost:5173",

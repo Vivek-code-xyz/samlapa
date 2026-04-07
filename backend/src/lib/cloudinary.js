@@ -9,4 +9,15 @@ cloudinary.config({
     api_secret:process.env.CLOUDINARY_API_SECRET
 })
 
+const cloudinaryEnvVars = [
+    "CLOUDINARY_CLOUD_NAME",
+    "CLOUDINARY_API_KEY",
+    "CLOUDINARY_API_SECRET"
+]
+
+const missingCloudinaryEnv = cloudinaryEnvVars.filter((key) => !process.env[key])
+if (missingCloudinaryEnv.length > 0) {
+    console.error("Missing Cloudinary environment variables:", missingCloudinaryEnv.join(", "))
+}
+
 export default cloudinary
