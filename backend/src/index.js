@@ -19,7 +19,18 @@ const __dirname = path.dirname(__filename)
 const backendDir = path.resolve(__dirname, "..")
 const clientBuildPath = path.resolve(backendDir, "../frontend/dist")
 
-app.use(helmet())
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'"],
+            styleSrc: ["'self'", "'unsafe-inline'"],
+            imgSrc: ["'self'", "data:", "https:"],
+            connectSrc: ["'self'", "https:"],
+            fontSrc: ["'self'", "https:"]
+        }
+    }
+}))
 app.use(express.json({ limit: '20mb' }))
 app.use(express.urlencoded({ extended: true, limit: '20mb' }))
 app.use(cookieParser())
